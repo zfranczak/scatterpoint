@@ -10,17 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const w = 1000;
       const h = 500;
       const padding = 50;
-      const time = data.map(function (datapoint) {
-        return datapoint.Time;
-      });
 
-      const year = data.map(function (datapoint) {
-        return datapoint.Year;
-      });
+      // Mapping Data
+      const parseTime = d3.timeParse('%M:%S'); // Parse the time format
+      const times = data.map((datapoint) => parseTime(datapoint.Time));
+      const years = data.map((datapoint) => datapoint.Year);
 
-      const athlete = data.map(function (datapoint) {
-        return datapoint.Name;
-      });
+      //   const athlete = data.map((datapoint) => datapoint.Name);
+
       const svg = d3
         .select('.chart')
         .append('svg')
@@ -32,5 +29,30 @@ document.addEventListener('DOMContentLoaded', () => {
         .append('div')
         .attr('id', 'tooltip')
         .style('opacity', 0);
+
+      // Create a time scale for x-coordinate
+      const xScale = d3
+        .scaleLinear()
+        .domain([d3.min(years), d3.max(years)])
+        .range([padding, w - padding]);
+
+      const yScale = d3
+        .scaleTime()
+        .domain(d3.extent(times))
+        .range([padding, h - padding]);
+
+      // Create Dots
+
+      svg
+        .selectAll('circle')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('cx', (d) => xScale(d.Year))
+        .attr('cy', (d, i) => yScale(times[i]))
+        .attr('r', 5)
+        .attr('class', 'dot')
+        .attr('data-xvalue', years)
+        .attr('data-yvalue', times);
     });
 });
