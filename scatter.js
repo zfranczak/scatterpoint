@@ -4,12 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
   )
     .then((response) => response.json())
     .then((data) => {
-      //Set Variables
+      // Set Variables
       console.log(data);
 
       const w = 1000;
       const h = 500;
       const padding = 50;
+
+      var timeFormat = d3.timeFormat('%M:%S');
 
       // Mapping Data
       const parseTime = d3.timeParse('%M:%S'); // Parse the time format
@@ -18,42 +20,24 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log(times);
       //   const athlete = data.map((datapoint) => datapoint.Name);
 
+      // Append the SVG to the chart container
       const svg = d3
         .select('.chart')
         .append('svg')
         .attr('width', w)
         .attr('height', h);
 
+      // Append the tooltip to the chart container
       const tooltip = d3
         .select('.chart')
         .append('div')
         .attr('id', 'tooltip')
         .style('opacity', 0);
 
-      const svgContainer = d3
-        .select('chart')
-        .append('svg')
-        .attr('width', w + 100)
-        .attr('height', h + 60);
-
-      svgContainer
-        .append(text)
-        .attr('transform', 'rotate(-90)')
-        .attr('x', -200)
-        .attr('y', 80)
-        .text('Time in Minutes');
-
-      svgContainer
-        .append('text')
-        .attr('x', width / 2 + 120)
-        .attr('y', height + 50)
-        .text('More Information: ')
-        .attr('class', 'info');
-
       // Create a time scale for x-coordinate
       const xScale = d3
         .scaleLinear()
-        .domain([d3.min(years), d3.max(years)])
+        .domain([d3.min(years) - 1, d3.max(years)])
         .range([padding, w - padding]);
 
       const yScale = d3
@@ -61,20 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .domain(d3.extent(times))
         .range([padding, h - padding]);
 
-      svgContainer
-        .append('g')
-        .call(xAxis)
-        .attr('id', 'x-axis')
-        .attr('transform', 'translate(60, 400)');
-
-      svgContainer
-        .append('g')
-        .call(yAxis)
-        .attr('id', 'y-axis')
-        .attr('transform', 'translate(60, 0)');
-
       // Create Dots
-
       svg
         .selectAll('circle')
         .data(data)
@@ -86,5 +57,18 @@ document.addEventListener('DOMContentLoaded', () => {
         .attr('class', 'dot')
         .attr('data-xvalue', years)
         .attr('data-yvalue', times);
+
+      const xAxis = d3.axisBottom(xScale).tickFormat(d3.format('d'));
+      const yAxis = d3.axisLeft(yScale).tickFormat(timeFormat);
+
+      svg
+        .append('g')
+        .attr('transform', 'translate(0,' + (h - padding) + ')')
+        .call(xAxis);
+
+      svg
+        .append('g')
+        .attr('transform', 'translate(' + padding + ',0)')
+        .call(yAxis);
     });
 });
