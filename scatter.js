@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const parseTime = d3.timeParse('%M:%S'); // Parse the time format
       const times = data.map((datapoint) => parseTime(datapoint.Time));
       const years = data.map((datapoint) => datapoint.Year);
-
+      console.log(times);
       //   const athlete = data.map((datapoint) => datapoint.Name);
 
       const svg = d3
@@ -30,6 +30,26 @@ document.addEventListener('DOMContentLoaded', () => {
         .attr('id', 'tooltip')
         .style('opacity', 0);
 
+      const svgContainer = d3
+        .select('chart')
+        .append('svg')
+        .attr('width', w + 100)
+        .attr('height', h + 60);
+
+      svgContainer
+        .append(text)
+        .attr('transform', 'rotate(-90)')
+        .attr('x', -200)
+        .attr('y', 80)
+        .text('Time in Minutes');
+
+      svgContainer
+        .append('text')
+        .attr('x', width / 2 + 120)
+        .attr('y', height + 50)
+        .text('More Information: ')
+        .attr('class', 'info');
+
       // Create a time scale for x-coordinate
       const xScale = d3
         .scaleLinear()
@@ -40,6 +60,18 @@ document.addEventListener('DOMContentLoaded', () => {
         .scaleTime()
         .domain(d3.extent(times))
         .range([padding, h - padding]);
+
+      svgContainer
+        .append('g')
+        .call(xAxis)
+        .attr('id', 'x-axis')
+        .attr('transform', 'translate(60, 400)');
+
+      svgContainer
+        .append('g')
+        .call(yAxis)
+        .attr('id', 'y-axis')
+        .attr('transform', 'translate(60, 0)');
 
       // Create Dots
 
