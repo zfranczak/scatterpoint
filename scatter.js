@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const yScale = d3
         .scaleTime()
         .domain(d3.extent(times))
-        .range([padding, h - padding]);
-
+        .range([padding + 50, h - padding]);
+      console.log(years);
       // Create Dots
       svg
         .selectAll('circle')
@@ -58,8 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .attr('cy', (d, i) => yScale(times[i]))
         .attr('r', 5)
         .attr('class', 'dot')
-        .attr('data-xvalue', years)
-        .attr('data-yvalue', times);
+        .attr('data-xvalue', (d) => d.Year)
+        .attr('data-yvalue', (d, i) => times[i]);
 
       const xAxis = d3.axisBottom(xScale).tickFormat(d3.format('d'));
       const yAxis = d3.axisLeft(yScale).tickFormat(timeFormat);
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .append('text')
         .attr('class', 'axis-label')
         .attr('x', w / 2)
-        .attr('y', h - padding / 2 + 20)
+        .attr('y', h - padding / 2 + 25)
         .style('text-anchor', 'middle')
         .text('Year');
 
@@ -79,18 +79,40 @@ document.addEventListener('DOMContentLoaded', () => {
         .attr('class', 'axis-label')
         .attr('transform', 'rotate(-90)')
         .attr('x', -h / 2)
-        .attr('y', padding / 2 - 10)
+        .attr('y', padding / 2)
         .style('text-anchor', 'middle')
         .text('Time in Minutes');
 
+      //Title
       svg
-        .append('g')
-        .attr('transform', `translate(0, ${h - padding})`)
-        .call(xAxis);
+        .append('text')
+        .attr('class', 'chart-title')
+        .attr('x', w / 2)
+        .attr('y', 30)
+        .style('text-anchor', 'middle')
+        .style('font-size', '30px')
+        .text('Doping in Professional Bicycle Racing');
+
+      //Subtitle
+      svg
+        .append('text')
+        .attr('class', 'chart-subtitle')
+        .attr('x', w / 2)
+        .attr('y', 60)
+        .attr('text-anchor', 'middle')
+        .style('font-size', '20px')
+        .text("35 Fastest times up Alpe d'Huez");
 
       svg
         .append('g')
-        .attr('transform', `translate(${padding * 1.5},0)`)
-        .call(yAxis);
+        .attr('transform', `translate(0, ${h - padding + 10})`)
+        .call(xAxis)
+        .attr('id', 'x-axis');
+
+      svg
+        .append('g')
+        .attr('transform', `translate(${padding * 1.5},10)`)
+        .call(yAxis)
+        .attr('id', 'y-axis');
     });
 });
