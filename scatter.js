@@ -34,11 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
         .attr('id', 'tooltip')
         .style('opacity', 0);
 
+      // Append a container for the chart elements
+      const chartContainer = svg.append('g').attr('class', 'chart-container');
+
       // Create a time scale for x-coordinate
       const xScale = d3
         .scaleLinear()
         .domain([d3.min(years) - 1, d3.max(years)])
-        .range([padding, w - padding]);
+        .range([padding * 1.5, w - padding]);
 
       const yScale = d3
         .scaleTime()
@@ -61,14 +64,33 @@ document.addEventListener('DOMContentLoaded', () => {
       const xAxis = d3.axisBottom(xScale).tickFormat(d3.format('d'));
       const yAxis = d3.axisLeft(yScale).tickFormat(timeFormat);
 
+      // Append x-axis label within the container
+      chartContainer
+        .append('text')
+        .attr('class', 'axis-label')
+        .attr('x', w / 2)
+        .attr('y', h - padding / 2 + 20)
+        .style('text-anchor', 'middle')
+        .text('Year');
+
+      // Append y-axis label within the container
+      chartContainer
+        .append('text')
+        .attr('class', 'axis-label')
+        .attr('transform', 'rotate(-90)')
+        .attr('x', -h / 2)
+        .attr('y', padding / 2 - 10)
+        .style('text-anchor', 'middle')
+        .text('Time in Minutes');
+
       svg
         .append('g')
-        .attr('transform', 'translate(0,' + (h - padding) + ')')
+        .attr('transform', `translate(0, ${h - padding})`)
         .call(xAxis);
 
       svg
         .append('g')
-        .attr('transform', 'translate(' + padding + ',0)')
+        .attr('transform', `translate(${padding * 1.5},0)`)
         .call(yAxis);
     });
 });
