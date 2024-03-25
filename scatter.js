@@ -8,21 +8,26 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log(data);
 
       const myTheme = {
-        xAxisLabelFill: 'gray',
-        yAxisLabelFill: 'gray',
+        xAxisLabelFill: 'black',
+        yAxisLabelFill: 'black',
         xAxisLabelOffset: 40,
         yAxisLabelOffset: 40,
         xAxisLabelFontSize: '24px',
+        yAxisLabelFontSize: '24px',
         xAxisTickFontSize: '16px',
         yAxisTickFontSize: '16px',
-        xAxisTickFontFill: 'gray',
-        yAxisTickFontFill: 'gray',
+        xAxisTickFontFill: 'black',
+        yAxisTickFontFill: 'black',
+        innerHeight: 500,
+        innerWidth: 1000,
       };
 
       function render() {
         const chart = d3.select('.chart');
         chartComponent('.chart', Object.assign({}, myTheme, {}));
       }
+
+      render();
 
       // Function to label x-axis
       function labeledXAxis(selection, props) {
@@ -195,8 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr('x', w / 2)
           .attr('y', h - padding / 2 + 25)
           .style('text-anchor', 'middle')
-          .style(xAxisLabelFill)
-          .style(xAxisLabelFontSize)
+          // .style(xAxisLabelFill)
+          // .style(xAxisLabelFontSize)
           .text('Year');
 
         // Append y-axis label within the container
@@ -207,8 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr('x', -h / 2)
           .attr('y', padding / 2)
           .style('text-anchor', 'middle')
-          .stlye(yAxisLabelFill)
-          .style(yAxisLabelFontSize)
+          // .style(yAxisLabelFill)
+          // .style(yAxisLabelFontSize)
           .text('Time in Minutes');
 
         //Title
