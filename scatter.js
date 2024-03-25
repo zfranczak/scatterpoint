@@ -18,6 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
         yAxisTickFontSize: '16px',
         xAxisTickFontFill: 'black',
         yAxisTickFontFill: 'black',
+        xAxisTickLineStroke: 'black',
+        xAxisTickDensity: 10,
+        xAxisDomainLineStroke: 'black',
+        yAxisTickLineStroke: 'black',
+        yAxisTickDensity: 10,
+        yAxisDomainLineStroke: 'black',
         innerHeight: 500,
         innerWidth: 1000,
       };
@@ -25,6 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
       function render() {
         const chart = d3.select('.chart');
         chartComponent('.chart', Object.assign({}, myTheme, {}));
+        labeledXAxis('.chart', myTheme);
+        labeledYAxis('.chart', myTheme);
       }
 
       render();
@@ -200,8 +208,8 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr('x', w / 2)
           .attr('y', h - padding / 2 + 25)
           .style('text-anchor', 'middle')
-          // .style(xAxisLabelFill)
-          // .style(xAxisLabelFontSize)
+          .style('fill', xAxisLabelFill)
+          .style('font-size', xAxisLabelFontSize)
           .text('Year');
 
         // Append y-axis label within the container
@@ -212,8 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr('x', -h / 2)
           .attr('y', padding / 2)
           .style('text-anchor', 'middle')
-          // .style(yAxisLabelFill)
-          // .style(yAxisLabelFontSize)
+          .style('fill', yAxisLabelFill)
+          .style('font-size', yAxisLabelFontSize)
           .text('Time in Minutes');
 
         //Title
