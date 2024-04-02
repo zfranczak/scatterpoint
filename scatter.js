@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
         yAxisLabelFontSize: '24px',
         xAxisTickFontSize: '16px',
         yAxisTickFontSize: '16px',
-        xAxisTickFontFill: 'black',
-        yAxisTickFontFill: 'black',
+        xAxisTickFontFill: 'red',
+        yAxisTickFontFill: 'red',
         xAxisTickLineStroke: 'black',
         xAxisTickDensity: 10,
         xAxisDomainLineStroke: 'black',
@@ -30,105 +30,104 @@ document.addEventListener('DOMContentLoaded', () => {
 
       function render() {
         const chart = d3.select('.chart');
-        chartComponent('.chart', Object.assign({}, myTheme, {}));
-        labeledXAxis('.chart', myTheme);
-        labeledYAxis('.chart', myTheme);
+        chartComponent(chart, Object.assign({}, myTheme, {}));
+        // labeledXAxis(chart, myTheme);
+        // labeledYAxis(chart, myTheme);
       }
 
       render();
+      // // Function to label x-axis
+      // function labeledXAxis(selection, props) {
+      //   const {
+      //     xScale,
+      //     xAxisLabel,
+      //     xAxisLabelFill,
+      //     xAxisLabelOffset,
+      //     xAxisLabelFontSize,
+      //     xAxisTickFontSize,
+      //     xAxisTickFontFill,
+      //     xAxisTickLineStroke,
+      //     xAxisTickDensity,
+      //     xAxisDomainLineStroke,
+      //     innerWidth,
+      //     innerHeight,
+      //   } = props;
 
-      // Function to label x-axis
-      function labeledXAxis(selection, props) {
-        const {
-          xScale,
-          xAxisLabel,
-          xAxisLabelFill,
-          xAxisLabelOffset,
-          xAxisLabelFontSize,
-          xAxisTickFontSize,
-          xAxisTickFontFill,
-          xAxisTickLineStroke,
-          xAxisTickDensity,
-          xAxisDomainLineStroke,
-          innerWidth,
-          innerHeight,
-        } = props;
+      //   const xAxis = d3
+      //     .axisBottom(xScale)
+      //     .ticks(innerWidth / xAxisTickDensity);
+      //   let xAxisG = selection.selectAll('.x-axis').data([null]);
+      //   xAxisG = xAxisG
+      //     .enter()
+      //     .append('g')
+      //     .attr('class', 'x-axis')
+      //     .merge(xAxisG)
+      //     .attr('transform', `translate(0,${innerHeight})`);
+      //   xAxisG.call(xAxis);
+      //   xAxisG
+      //     .selectAll('.tick text')
+      //     .style('font-size', xAxisTickFontSize)
+      //     .attr('fill', xAxisTickFontFill);
+      //   xAxisG.selectAll('.tick line').attr('stroke', xAxisTickLineStroke);
+      //   xAxisG.select('.domain').attr('stroke', xAxisDomainLineStroke);
 
-        const xAxis = d3
-          .axisBottom(xScale)
-          .ticks(innerWidth / xAxisTickDensity);
-        let xAxisG = selection.selectAll('.x-axis').data([null]);
-        xAxisG = xAxisG
-          .enter()
-          .append('g')
-          .attr('class', 'x-axis')
-          .merge(xAxisG)
-          .attr('transform', `translate(0,${innerHeight})`);
-        xAxisG.call(xAxis);
-        xAxisG
-          .selectAll('.tick text')
-          .style('font-size', xAxisTickFontSize)
-          .attr('fill', xAxisTickFontFill);
-        xAxisG.selectAll('.tick line').attr('stroke', xAxisTickLineStroke);
-        xAxisG.select('.domain').attr('stroke', xAxisDomainLineStroke);
+      //   const xAxisLabelText = xAxisG.selectAll('.axis-label').data([null]);
+      //   xAxisLabelText
+      //     .enter()
+      //     .append('text')
+      //     .attr('class', 'axis-label')
+      //     .merge(xAxisLabelText)
+      //     .attr('fill', xAxisLabelFill)
+      //     .text(xAxisLabel)
+      //     .attr('x', innerWidth / 2)
+      //     .attr('y', xAxisLabelOffset)
+      //     .style('font-size', xAxisLabelFontSize);
+      // }
 
-        const xAxisLabelText = xAxisG.selectAll('.axis-label').data([null]);
-        xAxisLabelText
-          .enter()
-          .append('text')
-          .attr('class', 'axis-label')
-          .merge(xAxisLabelText)
-          .attr('fill', xAxisLabelFill)
-          .text(xAxisLabel)
-          .attr('x', innerWidth / 2)
-          .attr('y', xAxisLabelOffset)
-          .style('font-size', xAxisLabelFontSize);
-      }
+      // // Function to label y-axis
+      // function labeledYAxis(selection, props) {
+      //   const {
+      //     yScale,
+      //     yAxisLabel,
+      //     yAxisLabelFill,
+      //     yAxisLabelOffset,
+      //     yAxisLabelFontSize,
+      //     yAxisTickFontSize,
+      //     yAxisTickFontFill,
+      //     yAxisTickLineStroke,
+      //     yAxisTickDensity,
+      //     yAxisDomainLineStroke,
+      //     innerHeight,
+      //   } = props;
 
-      // Function to label y-axis
-      function labeledYAxis(selection, props) {
-        const {
-          yScale,
-          yAxisLabel,
-          yAxisLabelFill,
-          yAxisLabelOffset,
-          yAxisLabelFontSize,
-          yAxisTickFontSize,
-          yAxisTickFontFill,
-          yAxisTickLineStroke,
-          yAxisTickDensity,
-          yAxisDomainLineStroke,
-          innerHeight,
-        } = props;
+      //   const yAxis = d3.axisLeft(yScale).ticks(innerHeight / yAxisTickDensity);
+      //   let yAxisG = selection.selectAll('.y-axis').data([null]);
+      //   yAxisG = yAxisG
+      //     .enter()
+      //     .append('g')
+      //     .attr('class', 'y-axis')
+      //     .merge(yAxisG);
+      //   yAxisG.call(yAxis);
+      //   yAxisG
+      //     .selectAll('.tick text')
+      //     .style('font-size', yAxisTickFontSize)
+      //     .attr('fill', yAxisTickFontFill);
+      //   yAxisG.selectAll('.tick line').attr('stroke', yAxisTickLineStroke);
+      //   yAxisG.select('.domain').attr('stroke', yAxisDomainLineStroke);
 
-        const yAxis = d3.axisLeft(yScale).ticks(innerHeight / yAxisTickDensity);
-        let yAxisG = selection.selectAll('.y-axis').data([null]);
-        yAxisG = yAxisG
-          .enter()
-          .append('g')
-          .attr('class', 'y-axis')
-          .merge(yAxisG);
-        yAxisG.call(yAxis);
-        yAxisG
-          .selectAll('.tick text')
-          .style('font-size', yAxisTickFontSize)
-          .attr('fill', yAxisTickFontFill);
-        yAxisG.selectAll('.tick line').attr('stroke', yAxisTickLineStroke);
-        yAxisG.select('.domain').attr('stroke', yAxisDomainLineStroke);
-
-        const yAxisLabelText = yAxisG.selectAll('.axis-label').data([null]);
-        yAxisLabelText
-          .enter()
-          .append('text')
-          .attr('class', 'axis-label')
-          .merge(yAxisLabelText)
-          .attr('fill', yAxisLabelFill)
-          .text(yAxisLabel)
-          .attr('transform', 'rotate(-90)')
-          .attr('x', -innerHeight / 2)
-          .attr('y', -yAxisLabelOffset)
-          .style('font-size', yAxisLabelFontSize);
-      }
+      //   const yAxisLabelText = yAxisG.selectAll('.axis-label').data([null]);
+      //   yAxisLabelText
+      //     .enter()
+      //     .append('text')
+      //     .attr('class', 'axis-label')
+      //     .merge(yAxisLabelText)
+      //     .attr('fill', yAxisLabelFill)
+      //     .text(yAxisLabel)
+      //     .attr('transform', 'rotate(-90)')
+      //     .attr('x', -innerHeight / 2)
+      //     .attr('y', -yAxisLabelOffset)
+      //     .style('font-size', yAxisLabelFontSize);
+      // }
 
       function chartComponent(selection, props) {
         const {
@@ -181,8 +180,8 @@ document.addEventListener('DOMContentLoaded', () => {
           .range([padding * 1.5, w - padding]);
 
         const yScale = d3
-          .scaleTime()
-          .domain(d3.extent(times))
+          .scaleLinear()
+          .domain([d3.min(times) - 1, d3.max(times)])
           .range([padding + 50, h - padding]);
         console.log(years);
         // Create Dots
