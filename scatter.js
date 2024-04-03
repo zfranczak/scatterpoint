@@ -141,6 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
           yAxisTickFontSize,
           xAxisTickFontFill,
           yAxisTickFontFill,
+          xAxisTickLineStroke,
+          xAxisTickDensity,
+          xAxisDomainLineStroke,
+          yAxisTickLineStroke,
+          yAxisTickDensity,
+          yAxisDomainLineStroke,
+          innerHeight,
+          innerWidth,
         } = props;
 
         const w = 1000;
