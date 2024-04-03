@@ -11,11 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
         xAxisLabelFill: 'black',
         yAxisLabelFill: 'black',
         xAxisLabelOffset: 40,
-        yAxisLabelOffset: 40,
+        yAxisLabelOffset: 0,
         xAxisLabelFontSize: '24px',
         yAxisLabelFontSize: '24px',
         xAxisTickFontSize: '16px',
         yAxisTickFontSize: '16px',
+        // xAxisTickFontFamily: 'Monospace',
+        // yAxisTickFontFamily: 'Monospace',
         xAxisTickFontFill: 'red',
         yAxisTickFontFill: 'red',
         xAxisTickLineStroke: 'black',
@@ -36,98 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       render();
-      // // Function to label x-axis
-      // function labeledXAxis(selection, props) {
-      //   const {
-      //     xScale,
-      //     xAxisLabel,
-      //     xAxisLabelFill,
-      //     xAxisLabelOffset,
-      //     xAxisLabelFontSize,
-      //     xAxisTickFontSize,
-      //     xAxisTickFontFill,
-      //     xAxisTickLineStroke,
-      //     xAxisTickDensity,
-      //     xAxisDomainLineStroke,
-      //     innerWidth,
-      //     innerHeight,
-      //   } = props;
 
-      //   const xAxis = d3
-      //     .axisBottom(xScale)
-      //     .ticks(innerWidth / xAxisTickDensity);
-      //   let xAxisG = selection.selectAll('.x-axis').data([null]);
-      //   xAxisG = xAxisG
-      //     .enter()
-      //     .append('g')
-      //     .attr('class', 'x-axis')
-      //     .merge(xAxisG)
-      //     .attr('transform', `translate(0,${innerHeight})`);
-      //   xAxisG.call(xAxis);
-      //   xAxisG
-      //     .selectAll('.tick text')
-      //     .style('font-size', xAxisTickFontSize)
-      //     .attr('fill', xAxisTickFontFill);
-      //   xAxisG.selectAll('.tick line').attr('stroke', xAxisTickLineStroke);
-      //   xAxisG.select('.domain').attr('stroke', xAxisDomainLineStroke);
-
-      //   const xAxisLabelText = xAxisG.selectAll('.axis-label').data([null]);
-      //   xAxisLabelText
-      //     .enter()
-      //     .append('text')
-      //     .attr('class', 'axis-label')
-      //     .merge(xAxisLabelText)
-      //     .attr('fill', xAxisLabelFill)
-      //     .text(xAxisLabel)
-      //     .attr('x', innerWidth / 2)
-      //     .attr('y', xAxisLabelOffset)
-      //     .style('font-size', xAxisLabelFontSize);
-      // }
-
-      // // Function to label y-axis
-      // function labeledYAxis(selection, props) {
-      //   const {
-      //     yScale,
-      //     yAxisLabel,
-      //     yAxisLabelFill,
-      //     yAxisLabelOffset,
-      //     yAxisLabelFontSize,
-      //     yAxisTickFontSize,
-      //     yAxisTickFontFill,
-      //     yAxisTickLineStroke,
-      //     yAxisTickDensity,
-      //     yAxisDomainLineStroke,
-      //     innerHeight,
-      //   } = props;
-
-      //   const yAxis = d3.axisLeft(yScale).ticks(innerHeight / yAxisTickDensity);
-      //   let yAxisG = selection.selectAll('.y-axis').data([null]);
-      //   yAxisG = yAxisG
-      //     .enter()
-      //     .append('g')
-      //     .attr('class', 'y-axis')
-      //     .merge(yAxisG);
-      //   yAxisG.call(yAxis);
-      //   yAxisG
-      //     .selectAll('.tick text')
-      //     .style('font-size', yAxisTickFontSize)
-      //     .attr('fill', yAxisTickFontFill);
-      //   yAxisG.selectAll('.tick line').attr('stroke', yAxisTickLineStroke);
-      //   yAxisG.select('.domain').attr('stroke', yAxisDomainLineStroke);
-
-      //   const yAxisLabelText = yAxisG.selectAll('.axis-label').data([null]);
-      //   yAxisLabelText
-      //     .enter()
-      //     .append('text')
-      //     .attr('class', 'axis-label')
-      //     .merge(yAxisLabelText)
-      //     .attr('fill', yAxisLabelFill)
-      //     .text(yAxisLabel)
-      //     .attr('transform', 'rotate(-90)')
-      //     .attr('x', -innerHeight / 2)
-      //     .attr('y', -yAxisLabelOffset)
-      //     .style('font-size', yAxisLabelFontSize);
-      // }
+      //LabeledAxes.js placeholder
 
       function chartComponent(selection, props) {
         const {
@@ -141,27 +53,31 @@ document.addEventListener('DOMContentLoaded', () => {
           yAxisTickFontSize,
           xAxisTickFontFill,
           yAxisTickFontFill,
-          xAxisTickLineStroke,
+          // xAxisTickLineStroke,
           xAxisTickDensity,
-          xAxisDomainLineStroke,
-          yAxisTickLineStroke,
+          // xAxisDomainLineStroke,
+          // yAxisTickLineStroke,
           yAxisTickDensity,
-          yAxisDomainLineStroke,
+          // yAxisDomainLineStroke,
           innerHeight,
           innerWidth,
         } = props;
 
         const w = 1000;
         const h = 500;
-        const padding = 50;
+        const padding = 100;
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
 
+        const parseTime = (timeString) => {
+          const [minutes, seconds] = timeString.split(':');
+          return new Date(1970, 0, 1, 0, parseInt(minutes), parseInt(seconds));
+        };
         var timeFormat = d3.timeFormat('%M:%S');
 
         // Mapping Data
-        const parseTime = d3.timeParse('%M:%S'); // Parse the time format
         const times = data.map((datapoint) => parseTime(datapoint.Time));
         const years = data.map((datapoint) => datapoint.Year);
-        console.log(times);
+
         //   const athlete = data.map((datapoint) => datapoint.Name);
 
         // Append the SVG to the chart container
@@ -175,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tooltip = d3
           .select('.chart')
           .append('div')
+          .attr('class', 'tooltip')
           .attr('id', 'tooltip')
           .style('opacity', 0);
 
@@ -188,10 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
           .range([padding * 1.5, w - padding]);
 
         const yScale = d3
-          .scaleLinear()
+          .scaleTime()
           .domain([d3.min(times) - 1, d3.max(times)])
-          .range([padding + 50, h - padding]);
-        console.log(years);
+          .range([padding, h - padding]);
+
         // Create Dots
         svg
           .selectAll('circle')
@@ -203,17 +120,76 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr('r', 5)
           .attr('class', 'dot')
           .attr('data-xvalue', (d) => d.Year)
-          .attr('data-yvalue', (d, i) => times[i]);
+          .attr('data-yvalue', (d, i) => times[i])
+          .on('mouseover', function (event, d) {
+            tooltip.style('opacity', 0.9);
+            tooltip.attr('data-year', d.Year);
+            tooltip
+              .html(
+                d.Name +
+                  ': ' +
+                  d.Nationality +
+                  '<br/>' +
+                  'Year: ' +
+                  d.Year +
+                  ', Time: ' +
+                  d.Time +
+                  (d.Doping ? '<br/><br/>' + d.Doping : '')
+              )
+              .style('left', event.pageX + 'px')
+              .style('top', event.pageY - 28 + 'px');
+          })
+          .on('mouseout', function () {
+            tooltip.style('opacity', 0);
+          });
 
-        const xAxis = d3.axisBottom(xScale).tickFormat(d3.format('d'));
-        const yAxis = d3.axisLeft(yScale).tickFormat(timeFormat);
+        const xAxis = d3
+          .axisBottom(xScale)
+          .tickFormat(d3.format('d'))
+          .tickSizeInner(-innerHeight)
+          .tickSizeOuter(0)
+          .tickPadding(10)
+          .tickSize(xAxisTickDensity)
+          .tickValues(xScale.ticks(xAxisTickDensity));
+
+        const yAxis = d3
+          .axisLeft(yScale)
+          .tickFormat(timeFormat)
+          .tickSizeInner(-innerWidth)
+          .tickSizeOuter(0)
+          .tickPadding(10)
+          .tickSize(yAxisTickDensity)
+          .tickValues(yScale.ticks(yAxisTickDensity));
+        // Append x-axis ticks with modified font size
+        const xAxisG = svg
+          .append('g')
+          .attr('transform', `translate(0, ${h - padding + 10})`)
+          .call(xAxis)
+          .attr('id', 'x-axis');
+
+        xAxisG
+          .selectAll('.tick text')
+          .style('font-size', xAxisTickFontSize)
+          .style('fill', xAxisTickFontFill);
+
+        // Append y-axis ticks with modified font size
+        const yAxisG = svg
+          .append('g')
+          .attr('transform', `translate(${padding * 1.5},10)`)
+          .call(yAxis)
+          .attr('id', 'y-axis');
+
+        yAxisG
+          .selectAll('.tick text')
+          .style('font-size', yAxisTickFontSize)
+          .style('fill', yAxisTickFontFill);
 
         // Append x-axis label within the container
         chartContainer
           .append('text')
           .attr('class', 'axis-label')
           .attr('x', w / 2)
-          .attr('y', h - padding / 2 + 25)
+          .attr('y', h - padding / 2 + xAxisLabelOffset)
           .style('text-anchor', 'middle')
           .style('fill', xAxisLabelFill)
           .style('font-size', xAxisLabelFontSize)
@@ -225,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr('class', 'axis-label')
           .attr('transform', 'rotate(-90)')
           .attr('x', -h / 2)
-          .attr('y', padding / 2)
+          .attr('y', padding / 1.5 - yAxisLabelOffset)
           .style('text-anchor', 'middle')
           .style('fill', yAxisLabelFill)
           .style('font-size', yAxisLabelFontSize)
@@ -251,17 +227,38 @@ document.addEventListener('DOMContentLoaded', () => {
           .style('font-size', '20px')
           .text("35 Fastest times up Alpe d'Huez");
 
-        svg
-          .append('g')
-          .attr('transform', `translate(0, ${h - padding + 10})`)
-          .call(xAxis)
-          .attr('id', 'x-axis');
+        //Legend
+        let legend = svg.append('g').attr('id', 'legend');
 
-        svg
+        legend
+          .selectAll('#legend')
+          // .data()
+          .enter()
           .append('g')
-          .attr('transform', `translate(${padding * 1.5},10)`)
-          .call(yAxis)
-          .attr('id', 'y-axis');
+          .attr('class', 'legend-label')
+          .attr('transform', function (d, i) {
+            return 'translate(0,' + (height / 2 - i * 20) + ')';
+          });
       }
+      legend
+        .append('rect')
+        .attr('x', width - 18)
+        .attr('width', 18)
+        .attr('height', 18)
+        .style('fill', color);
+
+      legend
+        .append('text')
+        .attr('x', width - 24)
+        .attr('y', 9)
+        .attr('dy', '.35em')
+        .style('text-anchor', 'end')
+        .text(function (d) {
+          if (d) {
+            return 'Riders with doping allegations';
+          } else {
+            return 'No doping allegations';
+          }
+        });
     });
 });
