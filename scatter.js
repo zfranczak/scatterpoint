@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
   )
     .then((response) => response.json())
     .then((data) => {
-      // Set Variables
       console.log(data);
 
       const myTheme = {
@@ -16,8 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         yAxisLabelFontSize: '24px',
         xAxisTickFontSize: '16px',
         yAxisTickFontSize: '16px',
-        // xAxisTickFontFamily: 'Monospace',
-        // yAxisTickFontFamily: 'Monospace',
         xAxisTickFontFill: 'black',
         yAxisTickFontFill: 'black',
         xAxisTickLineStroke: 'black',
@@ -33,13 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
       function render() {
         const chart = d3.select('.chart');
         chartComponent(chart, Object.assign({}, myTheme, {}));
-        // labeledXAxis(chart, myTheme);
-        // labeledYAxis(chart, myTheme);
       }
-
       render();
-
-      //LabeledAxes.js placeholder
 
       function chartComponent(selection, props) {
         const {
@@ -53,32 +45,27 @@ document.addEventListener('DOMContentLoaded', () => {
           yAxisTickFontSize,
           xAxisTickFontFill,
           yAxisTickFontFill,
-          // xAxisTickLineStroke,
           xAxisTickDensity,
-          // xAxisDomainLineStroke,
-          // yAxisTickLineStroke,
           yAxisTickDensity,
-          // yAxisDomainLineStroke,
           innerHeight,
           innerWidth,
         } = props;
 
+        // Set Variables
         var color = d3.scaleOrdinal(d3.schemeDark2);
         const w = 1000;
         const h = 500;
         const padding = 100;
 
+        var timeFormat = d3.timeFormat('%M:%S');
         const parseTime = (timeString) => {
           const [minutes, seconds] = timeString.split(':');
           return new Date(1970, 0, 1, 0, parseInt(minutes), parseInt(seconds));
         };
-        var timeFormat = d3.timeFormat('%M:%S');
 
         // Mapping Data
         const times = data.map((datapoint) => parseTime(datapoint.Time));
         const years = data.map((datapoint) => datapoint.Year);
-
-        //   const athlete = data.map((datapoint) => datapoint.Name);
 
         // Append the SVG to the chart container
         const svg = d3
@@ -101,13 +88,55 @@ document.addEventListener('DOMContentLoaded', () => {
         // Create a time scale for x-coordinate
         const xScale = d3
           .scaleLinear()
-          .domain([d3.min(years) - 1, d3.max(years)])
+          .domain([d3.min(years) - 1, d3.max(years) + 1])
           .range([padding * 1.5, w - padding]);
 
         const yScale = d3
           .scaleTime()
-          .domain([d3.min(times) - 1, d3.max(times)])
-          .range([padding, h - padding]);
+          .domain([d3.min(times), d3.max(times)])
+          .range([padding, h - padding + 10]);
+
+        const xAxis = d3
+          .axisBottom(xScale)
+          .tickFormat(d3.format('d'))
+          .tickSizeInner(-innerHeight)
+          .tickSizeOuter(0)
+          .tickPadding(10)
+          .tickSize(xAxisTickDensity)
+          .tickValues(xScale.ticks(xAxisTickDensity));
+
+        const yAxis = d3
+          .axisLeft(yScale)
+          .tickFormat(timeFormat)
+          .tickSizeInner(-innerWidth)
+          .tickSizeOuter(0)
+          .tickPadding(10)
+          .tickSize(yAxisTickDensity)
+          .tickValues(yScale.ticks(yAxisTickDensity));
+
+        // Append x-axis ticks with modified font size
+        const xAxisG = svg
+          .append('g')
+          .attr('transform', `translate(0, ${h - padding + 10})`)
+          .call(xAxis)
+          .attr('id', 'x-axis');
+
+        xAxisG
+          .selectAll('.tick text')
+          .style('font-size', xAxisTickFontSize)
+          .style('fill', xAxisTickFontFill);
+
+        // Append y-axis ticks with modified font size
+        const yAxisG = svg
+          .append('g')
+          .attr('transform', `translate(${padding * 1.5},0)`)
+          .call(yAxis)
+          .attr('id', 'y-axis');
+
+        yAxisG
+          .selectAll('.tick text')
+          .style('font-size', yAxisTickFontSize)
+          .style('fill', yAxisTickFontFill);
 
         // Create Dots
         svg
@@ -116,11 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
           .enter()
           .append('circle')
           .attr('cx', (d) => xScale(d.Year))
-          .attr('cy', (d, i) => yScale(times[i]))
+          .attr('cy', (d) => yScale(parseTime(d.Time)))
           .attr('r', 5)
           .attr('class', 'dot')
           .attr('data-xvalue', (d) => d.Year)
-          .attr('data-yvalue', (d, i) => times[i])
+          .attr('data-yvalue', function (d) {
+            return parseTime(d.Time).toISOString();
+          })
           .style('fill', function (d) {
             return color(d.Doping !== '');
           })
@@ -145,47 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
           .on('mouseout', function () {
             tooltip.style('opacity', 0);
           });
-
-        const xAxis = d3
-          .axisBottom(xScale)
-          .tickFormat(d3.format('d'))
-          .tickSizeInner(-innerHeight)
-          .tickSizeOuter(0)
-          .tickPadding(10)
-          .tickSize(xAxisTickDensity)
-          .tickValues(xScale.ticks(xAxisTickDensity));
-
-        const yAxis = d3
-          .axisLeft(yScale)
-          .tickFormat(timeFormat)
-          .tickSizeInner(-innerWidth)
-          .tickSizeOuter(0)
-          .tickPadding(10)
-          .tickSize(yAxisTickDensity)
-          .tickValues(yScale.ticks(yAxisTickDensity));
-        // Append x-axis ticks with modified font size
-        const xAxisG = svg
-          .append('g')
-          .attr('transform', `translate(0, ${h - padding + 10})`)
-          .call(xAxis)
-          .attr('id', 'x-axis');
-
-        xAxisG
-          .selectAll('.tick text')
-          .style('font-size', xAxisTickFontSize)
-          .style('fill', xAxisTickFontFill);
-
-        // Append y-axis ticks with modified font size
-        const yAxisG = svg
-          .append('g')
-          .attr('transform', `translate(${padding * 1.5},10)`)
-          .call(yAxis)
-          .attr('id', 'y-axis');
-
-        yAxisG
-          .selectAll('.tick text')
-          .style('font-size', yAxisTickFontSize)
-          .style('fill', yAxisTickFontFill);
 
         // Append x-axis label within the container
         chartContainer
@@ -242,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .append('g')
           .attr('class', 'legend-label')
           .attr('transform', function (d, i) {
-            return 'translate(0,' + (h / 2 - i * 20) + ')';
+            return 'translate(0,' + (h / 2 - i * 30) + ')';
           });
 
         // Append rectangle and text within each legend group
