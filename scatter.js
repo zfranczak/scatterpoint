@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
         yAxisTickFontSize: '16px',
         // xAxisTickFontFamily: 'Monospace',
         // yAxisTickFontFamily: 'Monospace',
-        xAxisTickFontFill: 'red',
-        yAxisTickFontFill: 'red',
+        xAxisTickFontFill: 'black',
+        yAxisTickFontFill: 'black',
         xAxisTickLineStroke: 'black',
         xAxisTickDensity: 10,
         xAxisDomainLineStroke: 'black',
@@ -63,10 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
           innerWidth,
         } = props;
 
+        var color = d3.scaleOrdinal(d3.schemeDark2);
         const w = 1000;
         const h = 500;
         const padding = 100;
-        var color = d3.scaleOrdinal(d3.schemeCategory10);
 
         const parseTime = (timeString) => {
           const [minutes, seconds] = timeString.split(':');
@@ -121,6 +121,9 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr('class', 'dot')
           .attr('data-xvalue', (d) => d.Year)
           .attr('data-yvalue', (d, i) => times[i])
+          .style('fill', function (d) {
+            return color(d.Doping !== '');
+          })
           .on('mouseover', function (event, d) {
             tooltip.style('opacity', 0.9);
             tooltip.attr('data-year', d.Year);
@@ -136,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   d.Time +
                   (d.Doping ? '<br/><br/>' + d.Doping : '')
               )
-              .style('left', event.pageX + 'px')
+              .style('left', event.pageX + 20 + 'px')
               .style('top', event.pageY - 28 + 'px');
           })
           .on('mouseout', function () {
@@ -228,37 +231,41 @@ document.addEventListener('DOMContentLoaded', () => {
           .text("35 Fastest times up Alpe d'Huez");
 
         //Legend
+        //Legend
         let legend = svg.append('g').attr('id', 'legend');
 
-        legend
-          .selectAll('#legend')
-          // .data()
+        // Bind data to legend groups properly
+        let legendGroup = legend
+          .selectAll('.legend-label')
+          .data(color.domain())
           .enter()
           .append('g')
           .attr('class', 'legend-label')
           .attr('transform', function (d, i) {
-            return 'translate(0,' + (height / 2 - i * 20) + ')';
+            return 'translate(0,' + (h / 2 - i * 20) + ')';
+          });
+
+        // Append rectangle and text within each legend group
+        legendGroup
+          .append('rect')
+          .attr('x', w - padding)
+          .attr('width', 20)
+          .attr('height', 20)
+          .style('fill', color);
+
+        legendGroup
+          .append('text')
+          .attr('x', w - padding - 5)
+          .attr('y', 9)
+          .attr('dy', '.35em')
+          .style('text-anchor', 'end')
+          .text(function (d) {
+            if (d) {
+              return 'Riders with doping allegations';
+            } else {
+              return 'No doping allegations';
+            }
           });
       }
-      legend
-        .append('rect')
-        .attr('x', width - 18)
-        .attr('width', 18)
-        .attr('height', 18)
-        .style('fill', color);
-
-      legend
-        .append('text')
-        .attr('x', width - 24)
-        .attr('y', 9)
-        .attr('dy', '.35em')
-        .style('text-anchor', 'end')
-        .text(function (d) {
-          if (d) {
-            return 'Riders with doping allegations';
-          } else {
-            return 'No doping allegations';
-          }
-        });
     });
 });

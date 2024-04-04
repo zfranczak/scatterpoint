@@ -1,3 +1,7 @@
+:root {
+  --main-font: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,23 +9,24 @@
 
 .dot {
   stroke: rgb(0, 0, 0);
-  fill: rgb(250, 186, 36);
-  opacity: 0.7;
+
+  opacity: 0.5;
 }
 
 .dot:hover {
   fill: white;
+  opacity: 1;
 }
 
-.main {
-  background-color: rgb(255, 255, 255);
+body {
+  background-color: rgb(46, 46, 46);
 }
 
 #tooltip {
   position: absolute;
   padding: 10px;
   font: 12px sans-serif;
-  background: lightsteelblue;
+  background: rgb(222, 176, 218);
   border: 0px;
   border-radius: 8px;
   pointer-events: none;
@@ -30,13 +35,31 @@
 #title {
   display: flex;
   justify-content: center;
-  padding: 50px 0;
+  padding: 20px 0;
   background-color: rgb(203, 217, 230);
   border-bottom: 1px solid black;
   box-shadow: 1px 2px 10px rgb(28, 59, 87);
   text-transform: uppercase;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
-    'Lucida Sans', Arial, sans-serif;
+  font-family: var(--main-font);
+}
+
+.legend-label {
+  font-family: var(--main-font);
+}
+
+.chart-title {
+  font-family: var(--main-font);
+}
+.chart-subtitle {
+  font-family: var(--main-font);
+}
+.axis-label {
+  font-family: var(--main-font);
+  text-transform: uppercase;
+}
+
+.tick {
+  font-family: var(--main-font);
 }
 
 .container {
@@ -50,9 +73,8 @@
 }
 
 .chart {
-  background-color: rgb(145, 181, 252);
+  background-color: #c0c0c0;
   border-radius: 35px;
-  padding: 20px;
   display: flex;
   box-shadow: 5px 4px 5px;
 }
